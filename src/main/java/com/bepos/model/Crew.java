@@ -1,21 +1,25 @@
 package com.bepos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Crew {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "crew_seq")
+    @SequenceGenerator(name="crew_seq", sequenceName = "crew_seq", allocationSize = 1)
     private Long id;
+
     private String name;
     private String shipName;
 
-    @Transient
-    private List<WantedPerson> wantedPersons;
-
+    @OneToMany(mappedBy = "crew", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<WantedPirate> crewMembers = new ArrayList<>();
 
     // GET & SET
 
@@ -27,7 +31,7 @@ public class Crew {
         this.id = id;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
@@ -35,7 +39,7 @@ public class Crew {
         this.name = name;
     }
 
-    public String shipName() {
+    public String getShipName() {
         return shipName;
     }
 
@@ -43,11 +47,17 @@ public class Crew {
         this.shipName = shipName;
     }
 
-    public List<WantedPerson> getWantedPersons() {
-        return wantedPersons;
+    public List<WantedPirate> getCrewMembers() {
+        return crewMembers;
     }
 
-    public void setWantedPersons(List<WantedPerson> wantedPersons) {
-        this.wantedPersons = wantedPersons;
+    public void addCrewMember(WantedPirate pirate) {
+        crewMembers.add(pirate);
+        pirate.setCrew(this);
+    }
+
+    public void removeCrewMember(WantedPirate pirate) {
+        crewMembers.remove(pirate);
+        pirate.setCrew(null);
     }
 }

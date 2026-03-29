@@ -1,6 +1,7 @@
 package com.bepos.resource;
 
 import com.bepos.model.Crew;
+import com.bepos.model.WantedPirate;
 import com.bepos.service.CrewService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -34,6 +35,14 @@ public class CrewResource {
     public Response getById(@PathParam("id") Long id) {
         Crew crew = crewService.getById(id);
         return Response.ok().entity(crew).build();
+    }
+
+    @GET
+    @Path("/{id}/pirates")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPiratesByCrewId(@PathParam("id") Long id) {
+        List<WantedPirate> wantedPirates = crewService.getPiratesByCrewId(id);
+        return Response.ok().entity(wantedPirates).build();
     }
 
     @POST

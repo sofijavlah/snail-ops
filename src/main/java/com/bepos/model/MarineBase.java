@@ -2,17 +2,22 @@ package com.bepos.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
-//@Entity
+@Entity
 public class MarineBase {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "marine_base_seq")
+    @SequenceGenerator(name="marine_base_seq", sequenceName = "marine_base_seq", allocationSize = 1)
     private Long id;
+
     private String name;
     private String seaRegion;
 
-    private List<MarineOfficer> marineOfficers;
-
+    @OneToMany(mappedBy = "marineBase", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MarineOfficer> officers = new ArrayList<>();
 
     // GET & SET
 
@@ -24,7 +29,7 @@ public class MarineBase {
         this.id = id;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
@@ -32,7 +37,7 @@ public class MarineBase {
         this.name = name;
     }
 
-    public String seaRegion() {
+    public String getSeaRegion() {
         return seaRegion;
     }
 
@@ -40,11 +45,19 @@ public class MarineBase {
         this.seaRegion = seaRegion;
     }
 
-    public List<MarineOfficer> getMarineOfficers() {
-        return marineOfficers;
+    public List<MarineOfficer> getOfficers() {
+        return officers;
     }
 
-    public void setMarineOfficers(List<MarineOfficer> marineOfficers) {
-        this.marineOfficers = marineOfficers;
+    public void addOfficer(MarineOfficer officer) {
+        if (officer != null) {
+            officer.setMarineBase(this);
+        }
+    }
+
+    public void removeOfficer(MarineOfficer officer) {
+        if (officer != null && officers.contains(officer)) {
+            officer.setMarineBase(null);
+        }
     }
 }

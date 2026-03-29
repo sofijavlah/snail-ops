@@ -1,9 +1,10 @@
 package com.bepos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class MarineOfficer {
@@ -11,18 +12,22 @@ public class MarineOfficer {
     // PROPS
 
     @Id
-//    @GeneratedValue
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "marine_seq")
     @SequenceGenerator(name = "marine_seq", sequenceName = "marine_seq", allocationSize = 1)
     private Long id;
+
     private String fullName;
     private String rank;
     private String badgeNumber;
 
-    @Transient
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "marine_base_id", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private MarineBase marineBase;
-    @Transient
-    private List<CaseFile> caseFiles;
+
+    @ManyToMany(mappedBy = "marineOfficers")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Set<CaseFile> caseFiles = new HashSet<>();
 
 
     // GET & SET
@@ -64,15 +69,24 @@ public class MarineOfficer {
     }
 
     public void setMarineBase(MarineBase marineBase) {
+        if (this.marineBase == marineBase) {
+            return;
+        }
+
+        MarineBase previousMarineBase = this.marineBase;
         this.marineBase = marineBase;
+
+        if (previousMarineBase != null) {
+            previousMarineBase.getOfficers().remove(this);
+        }
+
+        if (marineBase != null && !marineBase.getOfficers().contains(this)) {
+            marineBase.getOfficers().add(this);
+        }
     }
 
-    public List<CaseFile> getCaseFiles() {
+    public Set<CaseFile> getCaseFiles() {
         return caseFiles;
-    }
-
-    public void setCaseFiles(List<CaseFile> caseFiles) {
-        this.caseFiles = caseFiles;
     }
 
     // FUNCTIONS & OVERRIDES

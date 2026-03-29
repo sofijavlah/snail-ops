@@ -1,0 +1,85 @@
+package com.bepos.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+
+@Entity
+public class WantedPirate {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pirate_seq")
+    @SequenceGenerator(name="pirate_seq", sequenceName = "pirate_seq", allocationSize = 1)
+    private Long id;
+
+    private String fullName;
+
+    @ManyToOne
+    @JoinColumn(name = "crew_id", nullable = true)
+    private Crew crew;
+
+    @OneToOne(mappedBy = "wantedPirate")
+    @JsonIgnore
+    private CaseFile caseFile;
+
+
+    // GET & SET
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public Crew getCrew() {
+        return crew;
+    }
+
+    public void setCrew(Crew crew) {
+        if (this.crew == crew) {
+            return;
+        }
+
+        Crew previousCrew = this.crew;
+        this.crew = crew;
+
+        if (previousCrew != null && previousCrew.getCrewMembers().contains(this)) {
+            previousCrew.getCrewMembers().remove(this);
+        }
+
+        if (crew != null && !crew.getCrewMembers().contains(this)) {
+            crew.getCrewMembers().add(this);
+        }
+    }
+
+    public CaseFile getCaseFile() {
+        return caseFile;
+    }
+
+    public void setCaseFile(CaseFile caseFile) {
+        if (this.caseFile == caseFile) {
+            return;
+        }
+
+        CaseFile previousCaseFile = this.caseFile;
+        this.caseFile = caseFile;
+
+        if (previousCaseFile != null && previousCaseFile.getWantedPirate() == this) {
+            previousCaseFile.setWantedPirate(null);
+        }
+
+        if (caseFile != null && caseFile.getWantedPirate() != this) {
+            caseFile.setWantedPirate(this);
+        }
+    }
+}

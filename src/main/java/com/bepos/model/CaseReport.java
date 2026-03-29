@@ -1,15 +1,23 @@
 package com.bepos.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-//@Entity
+@Entity
 public class CaseReport {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "case_report_seq")
+    @SequenceGenerator(name="case_report_seq", sequenceName = "case_report_seq", allocationSize = 1)
     private Long id;
+
     private String reportDate;
     private String title;
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "case_file_id", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private CaseFile caseFile;
 
 
@@ -23,7 +31,7 @@ public class CaseReport {
         this.id = id;
     }
 
-    public String reportDate() {
+    public String getReportDate() {
         return reportDate;
     }
 
@@ -31,7 +39,7 @@ public class CaseReport {
         this.reportDate = reportDate;
     }
 
-    public String title() {
+    public String getTitle() {
         return title;
     }
 
@@ -39,7 +47,7 @@ public class CaseReport {
         this.title = title;
     }
 
-    public String content() {
+    public String getContent() {
         return content;
     }
 
@@ -52,7 +60,19 @@ public class CaseReport {
     }
 
     public void setCaseFile(CaseFile caseFile) {
-        this.caseFile = caseFile;
-    }
+        if (this.caseFile == caseFile) {
+            return;
+        }
 
+        CaseFile previousCaseFile = this.caseFile;
+        this.caseFile = caseFile;
+
+        if (previousCaseFile != null) {
+            previousCaseFile.getReports().remove(this);
+        }
+
+        if (caseFile != null && !caseFile.getReports().contains(this)) {
+            caseFile.getReports().add(this);
+        }
+    }
 }

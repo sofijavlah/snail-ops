@@ -1,65 +1,86 @@
 package com.bepos.resource;
 
-import com.bepos.model.MarineOfficer;
-import com.bepos.service.MarineOfficerService;
+import com.bepos.model.CaseFile;
+import com.bepos.service.CaseFileService;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.List;
+import com.bepos.model.CaseReport;
 
-@Path("/marine-officers")
-public class MarineOfficerResource {
+@Path("/case-files")
+public class CaseFileResource {
 
     @Inject
-    private MarineOfficerService marineOfficerService;
+    private CaseFileService caseFileService;
 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
-        List<MarineOfficer> marineOfficers = null;
+        List<CaseFile> caseFiles = null;
         try {
-            marineOfficers = marineOfficerService.getAll();
+            caseFiles = caseFileService.getAll();
         } catch (Exception e) {
             return Response.status(Response.Status.NO_CONTENT).entity(e.getMessage()).build();
         }
-        return Response.ok().entity(marineOfficers).build();
+        return Response.ok().entity(caseFiles).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
-        MarineOfficer marineOfficer = null;
+        CaseFile caseFile = null;
         try {
-            marineOfficer = marineOfficerService.get(id);
+            caseFile = caseFileService.get(id);
         } catch (Exception e) {
             return Response.status(Response.Status.NO_CONTENT).entity(e.getMessage()).build();
         }
-        return Response.ok().entity(marineOfficer).build();
+        return Response.ok().entity(caseFile).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/by-rank")
-    public Response getByRank(@QueryParam("rank") String rank) {
-        List<MarineOfficer> marineOfficers = null;
+    @Path("/{id}/reports")
+    public Response getReportsByCaseFileId(@PathParam("id") Long id) {
+        List<CaseReport> caseReports = null;
         try {
-            marineOfficers = marineOfficerService.getByRank(rank);
+            caseReports = caseFileService.getReportsByCaseFileId(id);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-        return Response.ok().entity(marineOfficers).build();
+        return Response.ok().entity(caseReports).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/by-status")
+    public Response getByCaseStatus(@QueryParam("caseStatus") String caseStatus) {
+        List<CaseFile> caseFiles = null;
+        try {
+            caseFiles = caseFileService.getByCaseStatus(caseStatus);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+        return Response.ok().entity(caseFiles).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/add")
-    public Response add(MarineOfficer marine) {
+    public Response add(CaseFile caseFile) {
         try {
-            marineOfficerService.create(marine);
+            caseFileService.create(caseFile);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
@@ -67,24 +88,11 @@ public class MarineOfficerResource {
         return Response.ok().build();
     }
 
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/edit")
-    public Response edit(MarineOfficer marine) {
-        try {
-            MarineOfficer editedMarine = marineOfficerService.edit(marine);
-            return Response.ok().entity(editedMarine).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        }
-    }
-
     @DELETE
     @Path("/delete/{id}")
     public Response delete(@PathParam("id") Long id) {
         try {
-            marineOfficerService.delete(id);
+            caseFileService.delete(id);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

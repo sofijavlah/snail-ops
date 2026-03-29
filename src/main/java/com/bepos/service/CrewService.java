@@ -1,6 +1,7 @@
 package com.bepos.service;
 
 import com.bepos.model.Crew;
+import com.bepos.model.WantedPirate;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -21,6 +22,13 @@ public class CrewService {
     public List<Crew> getAll() {
         return entityManager
                 .createQuery("SELECT c FROM Crew c", Crew.class)
+                .getResultList();
+    }
+
+    public List<WantedPirate> getPiratesByCrewId(Long id) {
+        return entityManager
+                .createQuery("SELECT w FROM WantedPirate w WHERE w.crew.id = :id", WantedPirate.class)
+                .setParameter("id", id)
                 .getResultList();
     }
 

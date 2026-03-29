@@ -1,17 +1,25 @@
 package com.bepos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-//@Entity
+@Entity
 public class CrimeCategory {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "crime_cat_seq")
+    @SequenceGenerator(name = "crime_cat_seq", sequenceName = "crime_cat_seq", allocationSize = 1)
     private Long id;
+
     private String name;
     private String description;
 
-    private List<CaseFile> caseFiles;
+    @ManyToMany(mappedBy = "crimeCategories")
+    @JsonIgnore
+    private Set<CaseFile> caseFiles = new HashSet<>();
 
 
     // GET & SET
@@ -24,7 +32,7 @@ public class CrimeCategory {
         this.id = id;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
@@ -32,7 +40,7 @@ public class CrimeCategory {
         this.name = name;
     }
 
-    public String description() {
+    public String getDescription() {
         return description;
     }
 
@@ -40,11 +48,7 @@ public class CrimeCategory {
         this.description = description;
     }
 
-    public List<CaseFile> getCaseFiles() {
+    public Set<CaseFile> getCaseFiles() {
         return caseFiles;
-    }
-
-    public void setCaseFiles(List<CaseFile> caseFiles) {
-        this.caseFiles = caseFiles;
     }
 }
