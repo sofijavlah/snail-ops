@@ -2,6 +2,7 @@ package com.bepos.resource;
 
 import com.bepos.model.MarineBase;
 import com.bepos.service.MarineBaseService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -61,6 +62,7 @@ public class MarineBaseResource {
         return Response.ok().entity(marineOfficers).build();
     }
 
+    @RolesAllowed("admin")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/add")
