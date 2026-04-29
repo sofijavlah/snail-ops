@@ -163,19 +163,6 @@ public class TimeResponse {
     }
 
     public void setWantedPirate(WantedPirate wantedPirate) {
-        if (this.wantedPirate == wantedPirate) {
-            return;
-        }
-
-        WantedPirate previousWantedPirate = this.wantedPirate;
         this.wantedPirate = wantedPirate;
-
-        if (previousWantedPirate != null && previousWantedPirate.getTimeResponses().contains(this)) {
-            previousWantedPirate.getTimeResponses().remove(this);
-        }
-
-        if (wantedPirate != null && !wantedPirate.getTimeResponses().contains(this)) {
-            wantedPirate.getTimeResponses().add(this);
-        }
     }
 }

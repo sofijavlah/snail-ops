@@ -29,6 +29,9 @@ public class WantedPirate {
     private List<TimeResponse> timeResponses = new ArrayList<>();
 
 
+    @OneToMany(mappedBy="wantedPirate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CurrencyResponse> currencyResponses = new ArrayList<>();
+
     // GET & SET
 
     public Long getId() {
@@ -94,16 +97,46 @@ public class WantedPirate {
     }
 
     public void addTimeResponse(TimeResponse timeResponse) {
-        if (timeResponse != null) {
-            timeResponse.setWantedPirate(this);
+        if (timeResponse == null) {
+            return;
         }
+
+        timeResponse.setWantedPirate(this);
         timeResponses.add(timeResponse);
     }
 
     public void removeTimeResponse(TimeResponse timeResponse) {
-        if (timeResponse != null && timeResponses.contains(timeResponse)) {
+        if (timeResponse == null) {
+            return;
+        }
+
+        timeResponses.remove(timeResponse);
+        if (timeResponse.getWantedPirate() == this) {
             timeResponse.setWantedPirate(null);
         }
-        timeResponses.remove(timeResponse);
+    }
+
+    public List<CurrencyResponse> getCurrencyResponses() {
+        return currencyResponses;
+    }
+
+    public void addCurrencyResponse(CurrencyResponse currencyResponse) {
+        if (currencyResponse == null) {
+            return;
+        }
+
+        currencyResponse.setWantedPirate(this);
+        currencyResponses.add(currencyResponse);
+    }
+
+    public void removeCurrencyResponse(CurrencyResponse currencyResponse) {
+        if (currencyResponse == null) {
+            return;
+        }
+
+        currencyResponses.remove(currencyResponse);
+        if (currencyResponse.getWantedPirate() == this) {
+            currencyResponse.setWantedPirate(null);
+        }
     }
 }
