@@ -72,4 +72,9 @@ public class WantedPirateService {
         }
         entityManager.remove(wantedPirate);
     }
+
+    @Transactional
+    public WantedPirate edit(WantedPirate pirate) {
+        return entityManager.merge(pirate);
+    }
 }

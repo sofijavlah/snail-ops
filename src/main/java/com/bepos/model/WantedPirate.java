@@ -3,6 +3,9 @@ package com.bepos.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 public class WantedPirate {
@@ -21,6 +24,9 @@ public class WantedPirate {
     @OneToOne(mappedBy = "wantedPirate")
     @JsonIgnore
     private CaseFile caseFile;
+
+    @OneToMany(mappedBy = "wantedPirate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<TimeResponse> timeResponses = new ArrayList<>();
 
 
     // GET & SET
@@ -81,5 +87,23 @@ public class WantedPirate {
         if (caseFile != null && caseFile.getWantedPirate() != this) {
             caseFile.setWantedPirate(this);
         }
+    }
+
+    public List<TimeResponse> getTimeResponses() {
+        return timeResponses;
+    }
+
+    public void addTimeResponse(TimeResponse timeResponse) {
+        if (timeResponse != null) {
+            timeResponse.setWantedPirate(this);
+        }
+        timeResponses.add(timeResponse);
+    }
+
+    public void removeTimeResponse(TimeResponse timeResponse) {
+        if (timeResponse != null && timeResponses.contains(timeResponse)) {
+            timeResponse.setWantedPirate(null);
+        }
+        timeResponses.remove(timeResponse);
     }
 }
