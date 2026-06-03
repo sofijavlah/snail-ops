@@ -1,0 +1,60 @@
+{
+    "contentId": 1,
+    "epgId": 1919311161,
+    "title": "Vesti",
+    "season": null,
+    "epsiode": null,
+    "stars": 0,
+    "tagInfo": {
+        "tagId": 7,
+        "name": "INFO"
+    },
+    "categories": [
+        {
+            "categoryId": 304,
+            "name": "Aktuelno",
+            "picture": {
+                "icon": null,
+                "background": null,
+                "poster": null,
+                "originalTitleLogo": null,
+                "squareLogo": null,
+                "posterMark": null
+            }
+        },
+        {
+            "categoryId": 286,
+            "name": "Lokalni",
+            "picture": {
+                "icon": null,
+                "background": null,
+                "poster": null,
+                "originalTitleLogo": null,
+                "squareLogo": null,
+                "posterMark": null
+            }
+        }
+    ],
+    "description": "Najnovije vesti, analize i izveštaji sa lica mesta iz Srbije, Balkana i sveta. Budite u toku sa političkim, društvenim i poslovnim trendovima.",
+    "rating": 0,
+    "picture": {
+        "icon": null,
+        "background": "/images/logo_epg/9188/3e9a276fc6a949118ce900d6a8d1f5f5.jpeg",
+        "poster": null,
+        "originalTitleLogo": null,
+        "squareLogo": null,
+        "posterMark": null
+    },
+    "director": null,
+    "actor": null,
+    "producer": null,
+    "year": 2025,
+    "genre": [
+        304,
+        286
+    ],
+    "start": 1765807200000,
+    "end": 1765807800000,
+    "type": "reminder",
+    "priority": 3
+}

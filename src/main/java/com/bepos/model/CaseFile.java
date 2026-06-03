@@ -50,6 +50,15 @@ public class CaseFile {
     )
     private Set<CrimeCategory> crimeCategories = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "case_file_uploaded_file",
+            joinColumns = @JoinColumn(name = "case_file_id"),
+            inverseJoinColumns = @JoinColumn(name = "uploaded_file_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"case_file_id", "uploaded_file_id"})
+    )
+    private Set<UploadedFile> uploadedFiles = new HashSet<>();
+
 
     // GET & SET
 
@@ -191,4 +200,14 @@ public class CaseFile {
         crimeCategory.getCaseFiles().remove(this);
     }
 
+    public Set<UploadedFile> getUploadedFiles() {
+        return uploadedFiles;
+    }
+
+    public void addUploadedFile(UploadedFile file) {
+        uploadedFiles.add(file);
+        if (!file.getCaseFiles().contains(this)) {
+            file.getCaseFiles().add(this);
+        }
+    }
 }
